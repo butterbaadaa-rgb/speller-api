@@ -5,7 +5,7 @@ import rateLimit from 'express-rate-limit'
 import { assert, type Infer } from 'superstruct'
 import { RequestBodyStruct, ResponseStruct } from './struct'
 
-const spellerUrl = 'https://nara-speller.co.kr/results/'
+const spellerUrl = 'https://nara-speller.co.kr/api/check'
 
 const app = express()
 app.set('trust proxy', 1)
@@ -58,10 +58,10 @@ app.post('/', limiter, async (req, res) => {
     const spellerRes = await fetch(spellerUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
       },
-      body: `text1=${encodeURIComponent(text)}`,
-    })
+      body: JSON.stringify({ text: text, isStrictCheck: true }),
+})
     const result = await spellerRes.text()
     console.log('speller result:', result.slice(0, 500))
     const dataString = result.match(/data = \[.*;/g)?.[0] ?? ''
