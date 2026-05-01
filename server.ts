@@ -5,7 +5,7 @@ import rateLimit from 'express-rate-limit'
 import { assert, type Infer } from 'superstruct'
 import { RequestBodyStruct, ResponseStruct } from './struct'
 
-const spellerUrl = 'https://nara-speller.co.kr/api/spchk'
+const spellerUrl = 'https://nara-speller.co.kr/results/'
 
 const app = express()
 app.set('trust proxy', 1)
