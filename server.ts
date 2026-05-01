@@ -54,42 +54,28 @@ app.post('/', limiter, async (req, res) => {
 
   const text = body.text.split('\n').join('\r\n')
 
-  try {
+    try {
     const spellerRes = await fetch(spellerUrl, {
       method: 'POST',
       headers: {
-      'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ text: text, isStrictCheck: true }),
-})
+    })
     const result = await spellerRes.text()
-    console.log('speller result:', result.slice(0, 500))
-    const dataString = result.match(/data = \[.*;/g)?.[0] ?? ''
-    console.log('dataString:', dataString)
-
-    if (!dataString) {
-      return res.status(200).json({
-        suggestions: [],
-      })
-    }
-
-    const data = JSON.parse(dataString.slice(7, -1))[0]
-
-    // const errInfo = data[0].errInfo
+    const data = JSON.parse(result)
     const errInfo = (data.errInfo ?? [])
       .filter((err: any) => err.candWord)
       .map((err: any) => ({
-        description: err.help,
-        // type: err.correctMethod,
+        description: err.help.replace(/<[^>]*>/g, ''),
         start: err.start,
         end: err.end,
         text: err.orgStr,
         candidates: err.candWord.split('|'),
       }))
-
     return res.status(200).json({
       suggestions: errInfo,
-    } satisfies Infer<typeof ResponseStruct>)
+    })
   } catch (e) {
     console.error(e)
     return res.status(500).send('Internal Server Error')
