@@ -52,7 +52,7 @@ app.post('/', limiter, async (req, res) => {
     return res.status(400).send('Invalid request body')
   }
 
-  const text = body.text.split('\n').join('\r\n')
+  const text = body.text
 
     try {
     const spellerRes = await fetch(spellerUrl, {
