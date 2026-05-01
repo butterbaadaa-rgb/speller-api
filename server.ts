@@ -63,8 +63,9 @@ app.post('/', limiter, async (req, res) => {
       body: `text1=${encodeURIComponent(text)}`,
     })
     const result = await spellerRes.text()
-
+    console.log('speller result:', result.slice(0, 500))
     const dataString = result.match(/data = \[.*;/g)?.[0] ?? ''
+    console.log('dataString:', dataString)
 
     if (!dataString) {
       return res.status(200).json({
