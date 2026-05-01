@@ -8,6 +8,7 @@ import { RequestBodyStruct, ResponseStruct } from './struct'
 const spellerUrl = 'https://nara-speller.co.kr/speller/results'
 
 const app = express()
+app.set('trust proxy', 1)
 
 app.use(cors())
 app.use(bodyParser.json())
